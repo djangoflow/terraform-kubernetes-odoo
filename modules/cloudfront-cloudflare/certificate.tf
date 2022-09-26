@@ -2,6 +2,7 @@ resource "aws_acm_certificate" "cert" {
   domain_name               = keys(var.hostnames)[0]
   validation_method         = "DNS"
   subject_alternative_names = slice(keys(var.hostnames), 1, length(keys(var.hostnames)))
+#  provider                  = aws.virginia
   lifecycle {
     create_before_destroy = true
   }

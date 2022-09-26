@@ -1,7 +1,7 @@
 resource "kubernetes_persistent_volume_claim_v1" "data" {
   depends_on = [kubernetes_namespace_v1.namespace]
   metadata {
-    name = "${var.name}-odoo"
+    name = coalesce(var.pvc_name, "${var.name}-odoo")
     namespace = var.namespace
   }
   spec {

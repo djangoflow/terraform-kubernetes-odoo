@@ -23,13 +23,13 @@ resource "kubernetes_ingress_v1" "ingress" {
   spec {
     tls {
       hosts = concat(keys(var.hostnames), [
-        local.ingress-hostname
+        local.ingress_hostname
       ])
       secret_name = "${var.name}-letsencrypt"
     }
     dynamic "rule" {
       for_each = merge(var.hostnames, {
-        (local.ingress-hostname) : local.ingress-domain
+        (local.ingress_hostname) : local.ingress_domain
       })
       content {
         host = rule.key

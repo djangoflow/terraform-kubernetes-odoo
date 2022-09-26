@@ -3,6 +3,17 @@ variable "hostnames" {
   type        = map(string)
 }
 
+variable "ingress_domain" {
+  description = "The domain name where the random (non-cached) origin hostname will be generated"
+  type        = string
+  default     = null
+}
+
+variable "update_strategy" {
+  description = "The update strategy for the deployment"
+  default     = "Recreate"
+}
+
 variable "name" {
   type        = string
   description = "The name for this deployment"
@@ -45,9 +56,11 @@ variable "helm_timeout" {
 
 variable "db" {
   type = object({
-    host     = string
-    user     = string
-    password = string
+    name     = optional(string)
+    host     = optional(string)
+    user     = optional(string)
+    password = optional(string)
+    instance = optional(string)
   })
 }
 
@@ -55,18 +68,21 @@ variable "extra_env" {
   default = {}
 }
 
+variable "pvc_name" {
+  default = null
+}
 
 variable "limits" {
   default = {}
 }
 
 variable "command" {
-  type = list(string)
+  type    = list(string)
   default = null
 }
 
 variable "args" {
-  type = list(string)
+  type    = list(string)
   default = null
 }
 

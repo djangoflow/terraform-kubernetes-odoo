@@ -12,3 +12,7 @@ variable "logging_bucket" {
   type = string
   default = null
 }
+
+variable "aws_provider" {
+  default = null
+}

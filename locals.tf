@@ -4,11 +4,11 @@ resource "random_string" "ingress-name" {
 }
 
 locals {
-  ingress-domain   = values(var.hostnames)[0]
-  ingress-hostname = lower("${random_string.ingress-name.result}.${local.ingress-domain}")
+  ingress_domain   = coalesce(var.ingress_domain, values(var.hostnames)[0])
+  ingress_hostname = lower("${random_string.ingress-name.result}.${local.ingress_domain}")
 
   env = merge({
-    HOST : var.db.host
+    HOST : coalesce(var.db.host, data.google_sql_database_instance.db_instance.0.private_ip_address)
     USER : var.db.user
   }, var.extra_env)
 
@@ -21,7 +21,7 @@ locals {
   )
 
   secret_env = {
-    PASSWORD : var.db.password
+    PASSWORD : coalesce(var.db.password, random_password.db_password.0.result)
   }
   # DEPRECATED
   #  odoo_admin_password = coalesce(var.odoo_admin_password, random_password.random-odoo-password.result)

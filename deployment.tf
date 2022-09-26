@@ -29,7 +29,7 @@ module "deployment" {
   liveness_probe_failure        = var.liveness_probe.failure_threshold
   liveness_probe_success        = var.liveness_probe.success_threshold
   startup_probe_enabled         = false
-  security_context_enabled      = false
+  security_context_enabled      = true
   env                           = local.env
   resources_limits_cpu          = var.resources_limits_cpu
   resources_limits_memory       = var.resources_limits_memory
@@ -82,12 +82,12 @@ module "deployment" {
       mounts      = [
         {
           mount_path = "/etc/odoo/odoo.conf"
-          sub_path = "odoo.conf"
+          sub_path   = "odoo.conf"
         }
       ]
     }
   ]
-  update_strategy = "Recreate"
+  update_strategy = var.update_strategy
   # Not really needed for Odoo
   #  node_selector = {
   #    "iam.gke.io/gke-metadata-server-enabled" = "true"
