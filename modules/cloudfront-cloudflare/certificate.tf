@@ -2,7 +2,7 @@ resource "aws_acm_certificate" "cert" {
   domain_name               = keys(var.hostnames)[0]
   validation_method         = "DNS"
   subject_alternative_names = slice(keys(var.hostnames), 1, length(keys(var.hostnames)))
-#  provider                  = aws.virginia
+  #  provider                  = aws.virginia
   lifecycle {
     create_before_destroy = true
   }
@@ -15,7 +15,7 @@ resource "cloudflare_record" "aws_cname" {
     record  = trimsuffix(dvo.resource_record_value, ".")
     type    = dvo.resource_record_type
     zone_id = lookup(local.zones, dvo.domain_name,
-      lookup(local.zones, regex("^\\w+\\.(.+)$", dvo.domain_name)[0], "zone-id-not-found"))
+      lookup(local.zones, regex("^[\\w-]+\\.(.+)$", dvo.domain_name)[0], "zone-id-not-found"))
   }
   }
   name    = each.value.name

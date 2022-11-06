@@ -1,12 +1,20 @@
 variable "hostnames" {
   description = "A map of hostname:zone (parent domain) The first entry is the ingress domain"
   type        = map(string)
+  default     = null
+}
+
+variable "ingress" {
+  type = map(object({
+    dbfilter = optional(string, null)
+    domain    = string
+  }))
+  default = null
 }
 
 variable "ingress_domain" {
   description = "The domain name where the random (non-cached) origin hostname will be generated"
   type        = string
-  default     = null
 }
 
 variable "update_strategy" {
