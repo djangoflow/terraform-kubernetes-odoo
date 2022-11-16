@@ -1,7 +1,7 @@
 variable "ingress" {
   description = "A map of hostname:ingress objects "
   type        = map(object({
-    dbfilter = optional(string)
+    dbfilter = optional(string, "")
     domain   = string
   }))
   default = null
