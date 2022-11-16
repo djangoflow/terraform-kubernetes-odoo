@@ -19,7 +19,7 @@ resource "cloudflare_record" "a" {
   name       = local.ingress_hostname
   type       = "A"
   proxied    = false
-  value      = kubernetes_ingress_v1.ingress[keys(kubernetes_ingress_v1.ingress)[0]].status.0.load_balancer.0.ingress.0.ip
+  value      = kubernetes_ingress_v1.ingress["origin"].status.0.load_balancer.0.ingress.0.ip
   zone_id    = local.zones[var.ingress_domain]
   depends_on = [kubernetes_ingress_v1.ingress]
   lifecycle {

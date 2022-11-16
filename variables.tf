@@ -1,13 +1,8 @@
-variable "hostnames" {
-  description = "A map of hostname:zone (parent domain) The first entry is the ingress domain"
-  type        = map(string)
-  default     = null
-}
-
 variable "ingress" {
-  type = map(object({
-    dbfilter = optional(string, null)
-    domain    = string
+  description = "A map of hostname:ingress objects "
+  type        = map(object({
+    dbfilter = optional(string)
+    domain   = string
   }))
   default = null
 }

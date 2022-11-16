@@ -5,13 +5,6 @@ resource "random_string" "ingress-name" {
 
 locals {
   ingress_hostname = lower("${random_string.ingress-name.result}.${var.ingress_domain}")
-  hostnames        = coalesce(var.hostnames, {for k, v in var.ingress : k => v.domain})
-  ingress          = coalesce(var.ingress, var.hostnames != null ? {
-  for k, v in var.hostnames : k => {
-    domain = v, dbfilter = null
-  }
-  } : null)
-
   env = merge({
     HOST : coalesce(var.db.host, var.db.instance != null ? data.google_sql_database_instance.db_instance.0.private_ip_address : null)
     USER : var.db.user

@@ -1,8 +1,14 @@
 resource "kubernetes_ingress_v1" "ingress" {
-  depends_on = [module.deployment, kubernetes_namespace_v1.namespace]
-  for_each   = local.ingress
+  depends_on = [module.deployment, kubernetes_namespace_v1.namespace, random_string.ingress-name]
+  for_each   = merge({
+    origin : {
+      hostname = local.ingress_hostname
+      domain   = var.ingress_domain
+      dbfilter = ""
+    }
+  }, var.ingress)
   metadata {
-    name        = "${var.name}-odoo-ingress-${each.key}"
+    name        = "${var.name}-odoo-ingress-${lookup(each.value, "hostname", each.key)}"
     namespace   = var.namespace
     annotations = {
       "kubernetes.io/ingress.class"                         = "nginx"
@@ -23,11 +29,11 @@ resource "kubernetes_ingress_v1" "ingress" {
   }
   spec {
     tls {
-      hosts       = [each.key]
-      secret_name = "${var.name}-${each.key}-letsencrypt"
+      hosts       = [local.ingress_hostname, lookup(each.value, "hostname", each.key)]
+      secret_name = "${var.name}-${lookup(each.value, "hostname", each.key)}-letsencrypt"
     }
     rule {
-      host = each.key
+      host = lookup(each.value, "hostname", each.key)
       http {
         path {
           path = "/"
