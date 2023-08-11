@@ -71,6 +71,10 @@ variable "extra_env" {
   default = {}
 }
 
+variable "extra_secrets" {
+  default = {}
+}
+
 variable "pvc_name" {
   default = null
 }

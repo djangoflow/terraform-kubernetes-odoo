@@ -18,9 +18,9 @@ locals {
     var.extra_labels,
   )
 
-  secret_env = {
+  secret_env = merge({
     PASSWORD : coalesce(var.db.password, var.db.instance != null ? random_password.db_password.0.result : null)
-  }
+  }, var.extra_secrets)
   # DEPRECATED
   #  odoo_admin_password = coalesce(var.odoo_admin_password, random_password.random-odoo-password.result)
 }
