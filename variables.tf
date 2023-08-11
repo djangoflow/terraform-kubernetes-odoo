@@ -221,7 +221,7 @@ variable "resources_limits_cpu" {
 }
 
 variable "service_account_name" {
-  default     = null
+  default     = ""
   type        = string
   description = "Service account name"
 }
