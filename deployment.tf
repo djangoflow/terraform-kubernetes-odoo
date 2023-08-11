@@ -35,17 +35,19 @@ module "deployment" {
   resources_limits_memory       = var.resources_limits_memory
   resources_requests_cpu        = var.resources_requests_cpu
   resources_requests_memory     = var.resources_requests_memory
-  labels                        = merge(local.common_labels, {
+
+  service_account_name = var.service_account_name
+  labels               = merge(local.common_labels, {
     "app.kubernetes.io/instance" = "${var.name}-odoo"
     "app.kubernetes.io/version"  = var.image_tag
   })
 
   env_secret = [
-  for k, v in    local.secret_env : {
-    secret = "${var.name}-odoo-secrets"
-    name   = k
-    key    = k
-  }
+    for k, v in    local.secret_env : {
+      secret = "${var.name}-odoo-secrets"
+      name   = k
+      key    = k
+    }
   ]
   ports = [
     {

@@ -215,3 +215,9 @@ variable "resources_limits_cpu" {
   type    = string
   default = "1000m"
 }
+
+variable "service_account_name" {
+  default     = null
+  type        = string
+  description = "Service account name"
+}
