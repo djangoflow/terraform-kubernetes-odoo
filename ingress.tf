@@ -58,6 +58,17 @@ resource "kubernetes_ingress_v1" "ingress" {
           }
         }
         path {
+          path = "/websocket"
+          backend {
+            service {
+              name = "${var.name}-odoo"
+              port {
+                number = "8072"
+              }
+            }
+          }
+        }
+        path {
           path = "/web/database"
           backend {
             service {
