@@ -225,3 +225,11 @@ variable "service_account_name" {
   type        = string
   description = "Service account name"
 }
+
+variable "odoo_addons_image_name" {
+  default = ""
+}
+
+variable "odoo_addons_image_tag" {
+  default = ""
+}

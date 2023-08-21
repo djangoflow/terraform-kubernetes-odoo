@@ -4,6 +4,9 @@ module "deployment" {
 
   #  pre_install_job_command = ["odoo", "--stop-after-init", "--no-http", .....]
 
+  init_user_image_name = var.odoo_addons_image_name
+  init_user_image_tag  = var.odoo_addons_image_tag
+
   object_prefix                 = "${var.name}-odoo"
   replicas                      = 1
   command                       = var.command
@@ -64,7 +67,7 @@ module "deployment" {
     }
   ]
   security_context_gid = 101
-  volumes              = [
+  volumes              = concat([
     {
       name        = "data"
       type        = "persistent_volume_claim"
@@ -87,8 +90,20 @@ module "deployment" {
           sub_path   = "odoo.conf"
         }
       ]
+    },
+  ], length(var.odoo_addons_image_name) > 0 ? [
+    {
+      name        = "extra-addons"
+      type        = "emptyDir"
+      object_name = kubernetes_config_map.odoo_config.metadata.0.name
+      readonly    = false
+      mounts      = [
+        {
+          mount_path = "/mnt/extra-addons"
+        }
+      ]
     }
-  ]
+  ] : [])
   update_strategy = var.update_strategy
   # Not really needed for Odoo
   #  node_selector = {
