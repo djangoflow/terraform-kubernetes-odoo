@@ -94,8 +94,7 @@ module "deployment" {
   ], length(var.odoo_addons_image_name) > 0 ? [
     {
       name        = "extra-addons"
-      type        = "emptyDir"
-      object_name = kubernetes_config_map.odoo_config.metadata.0.name
+      type        = "empty_dir"
       readonly    = false
       mounts      = [
         {
