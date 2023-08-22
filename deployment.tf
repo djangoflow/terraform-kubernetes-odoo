@@ -66,6 +66,7 @@ module "deployment" {
       service_port   = "8072"
     }
   ]
+  security_context_uid = 101
   security_context_gid = 101
   volumes              = concat([
     {
