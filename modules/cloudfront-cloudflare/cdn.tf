@@ -85,6 +85,7 @@ resource "aws_cloudfront_distribution" "cdn" {
       "*/web/js/*",
       "*/web/image*",
       "*/web/content*",
+      "*/web/assets*",
       "*/website/image/*"
     ])
     content {
