@@ -43,7 +43,7 @@ module "deployment" {
   labels               = merge(local.common_labels, {
     "app.kubernetes.io/instance"      = "${var.name}-odoo"
     "app.kubernetes.io/version"       = var.image_tag
-    "backup.velero.io/backup-volumes" = "/var/lib/odoo"
+    "backup.velero.io/backup-volumes" = "data"
   })
 
   env_secret = [
