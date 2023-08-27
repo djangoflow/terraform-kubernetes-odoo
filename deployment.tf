@@ -41,8 +41,9 @@ module "deployment" {
 
   service_account_name = var.service_account_name
   labels               = merge(local.common_labels, {
-    "app.kubernetes.io/instance" = "${var.name}-odoo"
-    "app.kubernetes.io/version"  = var.image_tag
+    "app.kubernetes.io/instance"      = "${var.name}-odoo"
+    "app.kubernetes.io/version"       = var.image_tag
+    "backup.velero.io/backup-volumes" = "/var/lib/odoo"
   })
 
   env_secret = [
@@ -94,10 +95,10 @@ module "deployment" {
     },
   ], length(var.odoo_addons_image_name) > 0 ? [
     {
-      name        = "extra-addons"
-      type        = "empty_dir"
-      readonly    = false
-      mounts      = [
+      name     = "extra-addons"
+      type     = "empty_dir"
+      readonly = false
+      mounts   = [
         {
           mount_path = "/mnt/extra-addons"
         }
