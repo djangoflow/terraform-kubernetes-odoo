@@ -1,5 +1,6 @@
 module "deployment" {
   source     = "djangoflow/deployment/kubernetes"
+  version    = ">=2.5.2"
   depends_on = [kubernetes_namespace_v1.namespace, kubernetes_config_map.odoo_config, kubernetes_secret_v1.secrets]
 
   #  pre_install_job_command = ["odoo", "--stop-after-init", "--no-http", .....]
@@ -41,11 +42,12 @@ module "deployment" {
 
   service_account_name = var.service_account_name
   labels               = merge(local.common_labels, {
-    "app.kubernetes.io/instance"      = "${var.name}-odoo"
-    "app.kubernetes.io/version"       = var.image_tag
-    "backup.velero.io/backup-volumes" = "data"
+    "app.kubernetes.io/instance" = "${var.name}-odoo"
+    "app.kubernetes.io/version"  = var.image_tag
   })
-
+  template_labels = {
+    "backup.velero.io/backup-volumes" = "data"
+  }
   env_secret = [
     for k, v in    local.secret_env : {
       secret = "${var.name}-odoo-secrets"
