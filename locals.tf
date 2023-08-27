@@ -31,6 +31,6 @@ locals {
   # DEPRECATED
   #  odoo_admin_password = coalesce(var.odoo_admin_password, random_password.random-odoo-password.result)
   pg_dump_command = join(";", [
-    for db in var.backup_databases :"pg_dump -f /var/lib/odoo/pg_dump_${db}.sql.gz ${db}"
+    for db in var.velero_backup_databases :"pg_dump -f /var/lib/odoo/pg_dump_${db}.sql.gz ${db}"
   ])
 }
