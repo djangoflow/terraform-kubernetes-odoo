@@ -233,3 +233,8 @@ variable "odoo_addons_image_name" {
 variable "odoo_addons_image_tag" {
   default = ""
 }
+
+variable "enable_env_postgres" {
+  default = true
+  description = "Provider PG* variables for seamless "
+}
