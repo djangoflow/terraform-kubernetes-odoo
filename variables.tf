@@ -238,3 +238,9 @@ variable "enable_env_postgres" {
   default = true
   description = "Provider PG* variables for seamless "
 }
+
+variable "backup_databases" {
+  description = "List of databases to backup with pg_dump"
+  type = list(string)
+  default = []
+}

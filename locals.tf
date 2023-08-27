@@ -23,12 +23,14 @@ locals {
     },
     var.extra_labels,
   )
-
-  secret_env = merge({
+  secret_env      = merge({
     PASSWORD : local.password
   }, var.extra_secrets, var.enable_env_postgres ? {
     PGPASSWORD : local.password
   } : {})
   # DEPRECATED
   #  odoo_admin_password = coalesce(var.odoo_admin_password, random_password.random-odoo-password.result)
+  pg_dump_command = join(";", [
+    for db in var.backup_databases :"pg_dump -f /var/lib/odoo/pg_dump_${db}.sql.gz ${db}"
+  ])
 }
