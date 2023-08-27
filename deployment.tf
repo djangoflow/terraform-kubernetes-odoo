@@ -46,8 +46,8 @@ module "deployment" {
     "app.kubernetes.io/version"  = var.image_tag
   })
   template_annotations = {
-    "backup.velero.io/backup-volumes"   = "data"
-    "pre.hook.backup.velero.io/command" = "[\"/bin/bash\", \"-c\", \"${local.pg_dump_command}\"]"
+    "backup.velero.io/backup-volumes"    = len(var.backup_databases > 0) ? "data" : ""
+    "pre.hook.backup.velero.io/command"  = "[\"/bin/bash\", \"-c\", \"${local.pg_dump_command}\"]"
     "post.hook.backup.velero.io/command" = "[\"/bin/bash\", \"-c\", \"rm -f /var/lib/odoo/*.sql\"]"
   }
   env_secret = [

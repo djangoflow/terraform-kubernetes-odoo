@@ -239,8 +239,8 @@ variable "enable_env_postgres" {
   description = "Provider PG* variables for seamless "
 }
 
-variable "backup_databases" {
-  description = "List of databases to backup with pg_dump"
+variable "velero_backup_databases" {
+  description = "List of databases to backup with pg_dump and velero"
   type = list(string)
   default = []
 }
