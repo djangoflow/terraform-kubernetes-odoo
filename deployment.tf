@@ -45,7 +45,7 @@ module "deployment" {
     "app.kubernetes.io/instance" = "${var.name}-odoo"
     "app.kubernetes.io/version"  = var.image_tag
   })
-  template_labels = {
+  template_annotations = {
     "backup.velero.io/backup-volumes" = "data"
   }
   env_secret = [
