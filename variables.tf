@@ -226,21 +226,42 @@ variable "service_account_name" {
   description = "Service account name"
 }
 
-variable "odoo_addons_image_name" {
-  default = ""
+variable "odoo_addons_github_repo" {
+  description = "Sync extra addons from this github repo on startup"
+  default     = ""
 }
 
-variable "odoo_addons_image_tag" {
-  default = ""
+variable "odoo_addons_github_org" {
+  description = "Sync extra addons from this github org on startup"
+  default     = ""
+}
+
+variable "odoo_addons_github_ref" {
+  description = "Sync extra addons from this github ref on startup"
+  default     = ""
+}
+
+variable "odoo_addons_github_ssh" {
+  description = "SSH key to use for github sync"
+  default     = ""
 }
 
 variable "enable_env_postgres" {
-  default = true
+  default     = true
   description = "Provider PG* variables for seamless "
 }
 
 variable "velero_backup_databases" {
   description = "List of databases to backup with pg_dump and velero"
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
+
+variable "git_sync_image_name" {
+  default = "gcr.io/k8s-staging-git-sync/git-sync"
+}
+
+variable "git_sync_image_tag" {
+  default = "v4.1.0"
+}
+

@@ -1,12 +1,13 @@
 module "deployment" {
   source     = "djangoflow/deployment/kubernetes"
-  version    = ">=2.5.2"
-  depends_on = [kubernetes_namespace_v1.namespace, kubernetes_config_map.odoo_config, kubernetes_secret_v1.secrets]
+  version    = ">=2.5.4"
+  depends_on = [kubernetes_namespace_v1.namespace, kubernetes_config_map.odoo_config, kubernetes_secret_v1.secrets, kubernetes_secret_v1.git_secrets]
 
-  #  pre_install_job_command = ["odoo", "--stop-after-init", "--no-http", .....]
+#  pre_install_job_command = ["/bin/bash", "-c", "/mnt/cvs/djangoflow-odoo/bin/init-extra-addons.sh"]
 
-  init_user_image_name = var.odoo_addons_image_name
-  init_user_image_tag  = var.odoo_addons_image_tag
+  init_user_image_name = length(var.odoo_addons_github_repo) > 0 ? var.git_sync_image_name : ""
+  init_user_image_tag  = length(var.odoo_addons_github_repo) > 0 ? var.git_sync_image_tag : ""
+  init_user_args       = local.user_init_args
 
   object_prefix                 = "${var.name}-odoo"
   replicas                      = 1
@@ -71,9 +72,12 @@ module "deployment" {
       service_port   = "8072"
     }
   ]
-  security_context_uid = 101
-  security_context_gid = 101
-  volumes              = concat([
+  security_context_uid           = 101
+  security_context_gid           = 101
+  init_user_security_context_gid = 101
+  init_user_security_context_uid = 101
+
+  volumes = concat([
     {
       name        = "data"
       type        = "persistent_volume_claim"
@@ -97,14 +101,31 @@ module "deployment" {
         }
       ]
     },
-  ], length(var.odoo_addons_image_name) > 0 ? [
     {
-      name     = "extra-addons"
-      type     = "empty_dir"
-      readonly = false
-      mounts   = [
+      name        = "git-secrets"
+      type        = "secret"
+      object_name = kubernetes_secret_v1.git_secrets.metadata.0.name
+      readonly    = true
+      mounts      = [
         {
-          mount_path = "/mnt/extra-addons"
+          mount_path = "/etc/git-secret/ssh"
+          sub_path   = "ssh"
+        },
+        {
+          mount_path = "/etc/git-secret/known_hosts"
+          sub_path   = "known_hosts"
+        }
+      ]
+    },
+  ], length(var.odoo_addons_github_repo) > 0 ? [
+    {
+      name        = "extra-addons"
+      type        = "persistent_volume_claim"
+      object_name = kubernetes_persistent_volume_claim_v1.extra.0.metadata.0.name
+      readonly    = false
+      mounts      = [
+        {
+          mount_path = "/mnt"
         }
       ]
     }

@@ -23,7 +23,7 @@ locals {
     },
     var.extra_labels,
   )
-  secret_env      = merge({
+  secret_env = merge({
     PASSWORD : local.password
   }, var.extra_secrets, var.enable_env_postgres ? {
     PGPASSWORD : local.password
@@ -33,4 +33,13 @@ locals {
   pg_dump_command = join(";", [
     for db in var.velero_backup_databases :"pg_dump -f /var/lib/odoo/pg_dump_${db}.sql.gz ${db}"
   ])
+  user_init_args = length(var.odoo_addons_github_repo) > 0 ? [
+    "--repo=git@github.com:/${var.odoo_addons_github_org}/${var.odoo_addons_github_repo}",
+    "--ref=${var.odoo_addons_github_ref}",
+    "--root=/mnt/cvs",
+    "--depth=1",
+    "--add-user",
+    "--one-time",
+    "--sync-timeout=5m0s",
+  ] : []
 }
